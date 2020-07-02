@@ -164,6 +164,10 @@ export const Modal = styled(({ style, ...props }) => {
 			display: none;
 		}
 
+		::-webkit-scrollbar {
+			display: none;
+		}
+
 		> h3 {
 			margin: 0;
 		}
