@@ -60,7 +60,7 @@ describe('Browser: imageWriter', () => {
 				});
 
 				try {
-					imageWriter.flash(image, [fakeDrive], performWriteStub);
+					await imageWriter.flash(image, [fakeDrive], performWriteStub);
 				} catch {
 					// noop
 				} finally {

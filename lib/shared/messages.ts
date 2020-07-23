@@ -15,6 +15,7 @@
  */
 
 import { Dictionary } from 'lodash';
+import { bytesToClosestUnit } from './units';
 
 export const progress: Dictionary<(quantity: number) => string> = {
 	successful: (quantity: number) => {
@@ -56,8 +57,8 @@ export const compatibility = {
 		return 'Not Recommended';
 	},
 
-	tooSmall: (additionalSpace: string) => {
-		return `Insufficient space, additional ${additionalSpace} required`;
+	tooSmall: () => {
+		return 'Too small';
 	},
 
 	locked: () => {
@@ -74,7 +75,7 @@ export const compatibility = {
 
 	// The drive is large and therefore likely not a medium you want to write to.
 	largeDrive: () => {
-		return 'Large drive';
+		return 'Large Drive';
 	},
 } as const;
 
@@ -84,8 +85,12 @@ export const warning = {
 		drive: { device: string; size: number },
 	) => {
 		return [
-			`This image recommends a ${image.recommendedDriveSize}`,
-			`bytes drive, however ${drive.device} is only ${drive.size} bytes.`,
+			`This image recommends a ${bytesToClosestUnit(
+				image.recommendedDriveSize,
+			)}`,
+			`bytes drive, however ${drive.device} is only ${bytesToClosestUnit(
+				drive.size,
+			)} bytes.`,
 		].join(' ');
 	},
 
@@ -115,11 +120,16 @@ export const warning = {
 		].join(' ');
 	},
 
-	largeDriveSize: (drive: { description: string; device: string }) => {
-		return [
-			`Drive ${drive.description} (${drive.device}) is unusually large for an SD card or USB stick.`,
-			'\n\nAre you sure you want to flash this drive?',
-		].join(' ');
+	largeDriveSize: () => {
+		return `This is a large drive! Make sure it doesn't contain files that you want to keep.`;
+	},
+
+	systemDrive: () => {
+		return 'Selecting your system drive is dangerous and will erase your drive!';
+	},
+
+	sourceDrive: () => {
+		return `Contains the image you chose to flash`;
 	},
 };
 
