@@ -18,7 +18,7 @@ import * as React from 'react';
 import { Flex, Button, ProgressBar, Txt } from 'rendition';
 import { default as styled } from 'styled-components';
 
-import { fromFlashState } from '../../modules/progress-status';
+import { fromFlashState, FlashState } from '../../modules/progress-status';
 import { StepButton } from '../../styled-components';
 
 const FlashProgressBar = styled(ProgressBar)`
@@ -44,7 +44,7 @@ const FlashProgressBar = styled(ProgressBar)`
 `;
 
 interface ProgressButtonProps {
-	type: 'decompressing' | 'flashing' | 'verifying';
+	type: FlashState['type'];
 	active: boolean;
 	percentage: number;
 	position: number;
@@ -58,6 +58,8 @@ const colors = {
 	decompressing: '#00aeef',
 	flashing: '#da60ff',
 	verifying: '#1ac135',
+	downloading: '#00aeef',
+	default: '#00aeef',
 } as const;
 
 const CancelButton = styled((props) => (
@@ -80,6 +82,7 @@ export class ProgressButton extends React.PureComponent<ProgressButtonProps> {
 			position: this.props.position,
 			percentage: this.props.percentage,
 		});
+		const type = this.props.type || 'default';
 		if (this.props.active) {
 			return (
 				<>
@@ -96,12 +99,12 @@ export class ProgressButton extends React.PureComponent<ProgressButtonProps> {
 					>
 						<Flex>
 							<Txt color="#fff">{status}&nbsp;</Txt>
-							<Txt color={colors[this.props.type]}>{position}</Txt>
+							<Txt color={colors[type]}>{position}</Txt>
 						</Flex>
 						<CancelButton onClick={this.props.cancel} color="#00aeef" />
 					</Flex>
 					<FlashProgressBar
-						background={colors[this.props.type]}
+						background={colors[type]}
 						value={this.props.percentage}
 					/>
 				</>
